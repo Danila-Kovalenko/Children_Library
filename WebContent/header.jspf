@@ -1,0 +1,11 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<div style="background-color: #f2f2f2; padding: 10px;">
+    <h2>Детская библиотека</h2>
+    <nav>
+        <a href="index.jsp">Главная</a> |
+        <a href="BookController?action=list">Список книг</a> |
+        <a href="BookController?action=new">Добавить книгу</a> |
+        <a href="BookController?action=hello">Приветствие</a>
+    </nav>
+</div>
+<hr>
