@@ -1,150 +1,113 @@
-# Отчет по разработке веб-приложения "Детская библиотека"
+# Entwicklungsbericht: Webanwendung "Kinderbibliothek"
 
-## Содержание
+## Inhalt
 
-1. [Введение](#1-введение)
-2. [Обзор проекта](#2-обзор-проекта)
-3. [Этапы разработки](#3-этапы-разработки)
-    - [3.1. Создание и наполнение базы данных](#31-создание-и-наполнение-базы-данных)
-    - [3.2. Настройка JDBC-соединения и пула соединений](#32-настройка-jdbc-соединения-и-пула-соединений)
-    - [3.3. Разработка JPA-контейнера](#33-разработка-jpa-контейнера)
-    - [3.4. Разработка сессионного компонента и EJB-контейнера](#34-разработка-сессионного-компонента-и-ejb-контейнера)
-    - [3.5. Разработка пользовательского интерфейса](#35-разработка-пользовательского-интерфейса)
-4. [Конфигурация и развертывание](#4-конфигурация-и-развертывание)
-    - [4.1. Настройка сервера приложений](#41-настройка-сервера-приложений)
-    - [4.2. Развертывание приложения](#42-развертывание-приложения)
-5. [Тестирование](#5-тестирование)
-6. [Заключение](#6-заключение)
+1. [Einleitung](#1-einleitung)
+2. [Projektübersicht](#2-projektübersicht)
+3. [Entwicklungsphasen](#3-entwicklungsphasen)
+    - [3.1. Erstellung und Befüllung der Datenbank](#31-erstellung-und-befüllung-der-datenbank)
+    - [3.2. Einrichtung der JDBC-Verbindung und Verbindungs-Pooling](#32-einrichtung-der-jdbc-verbindung-und-verbindungs-pooling)
+    - [3.3. Entwicklung eines JPA-Containers](#33-entwicklung-eines-jpa-containers)
+    - [3.4. Entwicklung eines Session-Komponenten- und EJB-Containers](#34-entwicklung-eines-session-komponenten-und-ejb-containers)
+    - [3.5. Entwicklung der Benutzeroberfläche](#35-entwicklung-der-benutzeroberfläche)
+4. [Konfiguration und Bereitstellung](#4-konfiguration-und-bereitstellung)
+    - [4.1. Einrichtung des Applikationsservers](#41-einrichtung-des-applikationsservers)
+    - [4.2. Bereitstellung der Anwendung](#42-bereitstellung-der-anwendung)
+5. [Tests](#5-tests)
+6. [Fazit](#6-fazit)
 
 ---
 
-## 1. Введение
+## 1. Einleitung
 
-Целью данного отчета является документирование процесса разработки веб-приложения "Детская библиотека". Приложение предназначено для управления каталогом детских книг, включая функциональность для добавления, редактирования, удаления и просмотра информации о книгах, авторах и категориях. Разработка велась с использованием технологий Java EE, таких как JSP, сервлеты, JDBC, JPA и EJB.
+Das Ziel dieses Berichts ist es, den Entwicklungsprozess der Webanwendung "Kinderbibliothek" zu dokumentieren. Die Anwendung ist darauf ausgelegt, einen Katalog von Kinderbüchern zu verwalten. Die Funktionen umfassen das Hinzufügen, Bearbeiten, Löschen und Anzeigen von Informationen über Bücher, Autoren und Kategorien. Die Entwicklung erfolgte unter Verwendung von Java EE-Technologien wie JSP, Servlets, JDBC, JPA und EJB.
 
-## 2. Обзор проекта
+## 2. Projektübersicht
 
-Веб-приложение "Детская библиотека" предназначено для управления коллекцией книг, обеспечивая пользователям удобный интерфейс для взаимодействия с данными. Основные функции приложения включают:
+Die Webanwendung "Kinderbibliothek" dient der Verwaltung einer Buchsammlung und bietet den Benutzern eine benutzerfreundliche Schnittstelle zur Interaktion mit den Daten. Die Hauptfunktionen umfassen:
 
-- **Просмотр списка книг**: Пользователи могут просматривать доступные книги, а также информацию об их авторах и категориях.
-- **Добавление новых книг**: Возможность добавления новых записей в каталог с указанием всех необходимых деталей.
-- **Редактирование и удаление книг**: Управление существующими записями для поддержания актуальности данных.
-- **Управление авторами и категориями**: Добавление, редактирование и удаление информации об авторах и категориях книг.
-- **Динамическая обработка данных**: Использование сервлетов и EJB для обработки запросов и бизнес-логики приложения.
+- **Anzeigen der Bücherliste**: Benutzer können die verfügbaren Bücher sowie Informationen über deren Autoren und Kategorien anzeigen.
+- **Hinzufügen neuer Bücher**: Möglichkeit, neue Einträge in den Katalog mit allen erforderlichen Details hinzuzufügen.
+- **Bearbeiten und Löschen von Büchern**: Verwaltung vorhandener Einträge zur Aktualisierung der Daten.
+- **Verwaltung von Autoren und Kategorien**: Hinzufügen, Bearbeiten und Löschen von Informationen über Autoren und Kategorien.
+- **Dynamische Datenverarbeitung**: Verwendung von Servlets und EJB zur Verarbeitung von Anfragen und Geschäftslogik der Anwendung.
 
-## 3. Этапы разработки
+## 3. Entwicklungsphasen
 
-### 3.1. Создание и наполнение базы данных
+### 3.1. Erstellung und Befüllung der Datenbank
 
-Первым этапом разработки было проектирование и создание базы данных, которая будет хранить информацию о книгах, авторах и категориях. База данных была разработана с учетом следующих сущностей:
+Der erste Schritt bestand darin, die Datenbank zu entwerfen und zu erstellen, die Informationen über Bücher, Autoren und Kategorien speichert. Die Datenbank umfasst folgende Entitäten:
 
-- **Authors (Авторы)**: Хранит информацию об авторах книг, включая имя, фамилию и биографию.
-- **Categories (Категории)**: Содержит категории книг, такие как "Фэнтези", "Приключения" и т.д.
-- **Books (Книги)**: Содержит информацию о книгах, включая название, автора, категорию, год издания и ISBN.
+- **Authors (Autoren)**: Speichert Informationen über Autoren, einschließlich Name, Nachname und Biografie.
+- **Categories (Kategorien)**: Enthält Buchkategorien wie "Fantasy", "Abenteuer" usw.
+- **Books (Bücher)**: Enthält Informationen über Bücher wie Titel, Autor, Kategorie, Erscheinungsjahr und ISBN.
 
-После создания схемы базы данных были разработаны SQL-скрипты для наполнения таблиц минимальным набором данных. Это позволило провести тестирование функциональности приложения на начальном этапе разработки.
+Nach der Erstellung des Datenbankschemas wurden SQL-Skripte entwickelt, um die Tabellen mit minimalen Daten zu füllen. Dies ermöglichte die Testung der Anwendung.
 
-### 3.2. Настройка JDBC-соединения и пула соединений
+### 3.2. Einrichtung der JDBC-Verbindung und Verbindungs-Pooling
 
-Для взаимодействия приложения с базой данных использовалась технология JDBC. Было необходимо настроить пул соединений (Connection Pool) для эффективного управления ресурсами и повышения производительности приложения.
+Für die Datenbankinteraktion wurde JDBC verwendet. Es wurde ein Verbindungs-Pooling eingerichtet, um die Ressourcennutzung zu optimieren.
 
-**Основные шаги настройки:**
+**Hauptschritte der Einrichtung:**
 
-1. **Конфигурация пула соединений**: В файле конфигурации сервера приложений был определен ресурс DataSource с параметрами подключения к базе данных, такими как URL, имя пользователя, пароль, драйвер JDBC и параметры пула (максимальное количество соединений, время ожидания и т.д.).
+1. **Konfiguration des Verbindungs-Pool**: Definition einer DataSource im Server-Konfigurationsfile.
+2. **Integration in DAO-Klassen**: Nutzung von Pooled Connections statt direkter Erstellung neuer Verbindungen.
 
-2. **Интеграция с приложением**: В DAO (Data Access Object) классах было реализовано получение соединений из пула вместо прямого создания новых соединений. Это обеспечило повторное использование существующих соединений и снизило накладные расходы на установку новых соединений с базой данных.
+### 3.3. Entwicklung eines JPA-Containers
 
-### 3.3. Разработка JPA-контейнера
+Zur Erleichterung der Datenbankinteraktion und zur Umsetzung des objekt-relationalen Mappings (ORM) wurde die Technologie JPA (Java Persistence API) verwendet.
 
-Для облегчения взаимодействия с базой данных и реализации объектно-реляционного отображения (ORM) использовалась технология JPA (Java Persistence API).
+**Hauptschritte der Entwicklung:**
 
-**Основные шаги разработки:**
+1. **Konfiguration von `persistence.xml`**: Definition einer Persistence-Unit mit Angabe der Datenbankverbindung und Hibernate-Parametern.
+2. **Annotieren von Modellen**: Verwendung von JPA-Annotationen wie `@Entity`, `@Table`, `@Id`, `@GeneratedValue`, `@ManyToOne` und `@OneToMany`, um Entitäten und deren Beziehungen zu definieren.
+3. **Erstellung von DAO-Klassen**: Entwicklung von CRUD-Methoden mit dem EntityManager zur Interaktion mit der Datenbank.
 
-1. **Конфигурация `persistence.xml`**: В файле конфигурации JPA была определена единица персистентности (`persistence-unit`), указаны классы сущностей (`Author`, `Category`, `Book`), а также параметры подключения к базе данных и свойства Hibernate (используемого провайдера JPA).
+### 3.4. Entwicklung eines Session-Komponenten- und EJB-Containers
 
-2. **Аннотирование моделей**: Классы моделей были аннотированы соответствующими JPA-аннотациями (`@Entity`, `@Table`, `@Id`, `@GeneratedValue`, `@ManyToOne`, `@OneToMany` и т.д.) для определения сущностей и их связей.
+Zur Umsetzung der Geschäftslogik der Anwendung wurden EJB (Enterprise JavaBeans) verwendet. Es wurde eine zustandslose Session-Komponente entwickelt.
 
-3. **Создание DAO-классов**: Были разработаны DAO-классы для каждой сущности, реализующие методы CRUD (создание, чтение, обновление, удаление) с использованием `EntityManager` для взаимодействия с базой данных через JPA.
+**Hauptschritte der Entwicklung:**
 
-### 3.4. Разработка сессионного компонента и EJB-контейнера
+1. **Erstellung von EJB-Services**: Implementierung eines `BookService` mit Methoden für die Buchverwaltung (Hinzufügen, Abrufen, Aktualisieren, Löschen).
+2. **Integration mit Servlets**: Aktualisierung der Servlets, um über die EJB-Komponente statt direkt mit DAO-Klassen zu interagieren.
 
-Для реализации бизнес-логики приложения использовались EJB (Enterprise JavaBeans). Было создано бессостоящее сессионное EJB-компонент для управления операциями с книгами.
+### 3.5. Entwicklung der Benutzeroberfläche
 
-**Основные шаги разработки:**
+Die Benutzeroberfläche wurde mit JSP-Seiten und -Fragmenten umgesetzt.
 
-1. **Создание EJB-сервисов**: Разработан `BookService` как бессостоящий сессионный EJB, аннотированный `@Stateless`. Этот сервис предоставляет методы для добавления, получения, обновления и удаления книг, взаимодействуя с DAO-классами.
+**Hauptschritte der Entwicklung:**
 
-2. **Внедрение зависимостей**: Использовались аннотации `@EJB` и `@Inject` для внедрения сервисов и DAO-компонентов в контроллеры и другие части приложения.
+1. **Erstellung von JSP-Fragmenten**: Entwicklung von wiederverwendbaren Layout-Komponenten wie `header.jspf` und `footer.jspf`.
+2. **Entwicklung der Hauptseiten**:
+    - **Startseite (`index.jsp`)**: Übersicht über die Anwendung.
+    - **Bücherliste (`books.jsp`)**: Anzeige einer Tabelle mit verfügbaren Büchern.
+    - **Formularseiten**: Seiten zum Hinzufügen und Bearbeiten von Büchern.
 
-3. **Интеграция с сервлетами**: Сервлеты (`BookController` и `HelloServlet`) были обновлены для использования EJB-сервисов вместо прямого взаимодействия с DAO. Это позволило разделить бизнес-логику и логику представления, повысив модульность и поддерживаемость кода.
+## 4. Konfiguration und Bereitstellung
 
-### 3.5. Разработка пользовательского интерфейса
+### 4.1. Einrichtung des Applikationsservers
 
-Для создания пользовательского интерфейса использовались JSP-страницы и фрагменты.
+Es wurde WildFly als Applikationsserver verwendet. Dieser wurde entsprechend konfiguriert:
 
-**Основные шаги разработки:**
+1. **Installation von WildFly**: Herunterladen und Konfigurieren des Servers.
+2. **Einrichtung des Verbindungs-Pool**: Definition einer DataSource für MySQL.
 
-1. **Создание JSP-фрагментов**: Были разработаны отдельные JSP-фрагменты для повторяющихся частей интерфейса, такие как заголовок (`header.jspf`) и подвал (`footer.jspf`). Эти фрагменты включались в основные JSP-страницы с помощью директивы включения.
+### 4.2. Bereitstellung der Anwendung
 
-2. **Разработка основных JSP-страниц**:
-    - **Главная страница (`index.jsp`)**: Представляет общую информацию о приложении и предоставляет навигацию.
-    - **Страница списка книг (`books.jsp`)**: Отображает таблицу с доступными книгами и предоставляет ссылки для редактирования, удаления и просмотра деталей каждой книги.
-    - **Страница добавления книги (`addBook.jsp`)**: Предоставляет форму для ввода информации о новой книге.
-    - **Страница редактирования книги (`editBook.jsp`)**: Позволяет редактировать существующую книгу.
-    - **Страница деталей книги (`bookDetails.jsp`)**: Отображает подробную информацию о выбранной книге.
-    - **Страница приветствия через EJB (`helloEJB.jsp`)**: Демонстрирует работу сервлета и взаимодействие с EJB-компонентами.
+**Hauptschritte:**
 
-3. **Использование JSTL**: Для упрощения работы с данными и управления потоком на JSP-страницах использовалась библиотека JSTL (JavaServer Pages Standard Tag Library).
+1. **Erstellung eines WAR-Files**: Kompilierung und Verpackung der Anwendung mit Maven.
+2. **Bereitstellung auf WildFly**: Kopieren des WAR-Files in den `deployments`-Ordner.
 
-## 4. Конфигурация и развертывание
+## 5. Tests
 
-### 4.1. Настройка сервера приложений
+Die Tests umfassten:
 
-Для развертывания приложения использовался сервер WildFly, который поддерживает Java EE и предоставляет необходимые контейнеры для JPA и EJB.
+1. **Datenbanktests**: Überprüfung der Tabellen und Beziehungen.
+2. **Funktionale Tests**: Sicherstellen der korrekten Ausführung der Geschäftslogik.
+3. **UI-Tests**: Überprüfung der Benutzeroberfläche.
 
-**Основные шаги настройки:**
+## 6. Fazit
 
-1. **Установка WildFly**: Скачивание и распаковка последней версии WildFly.
-
-2. **Настройка пула соединений**: В конфигурационном файле сервера WildFly был добавлен ресурс DataSource для подключения к базе данных MySQL. Также был настроен драйвер JDBC для MySQL, включая создание модуля `com.mysql` с соответствующими зависимостями и драйвером.
-
-3. **Конфигурация JPA и EJB**: Убедились, что файл `persistence.xml` корректно настроен и указывает на созданный DataSource. EJB-компоненты были автоматически обнаружены и развернуты сервером WildFly при развертывании приложения.
-
-### 4.2. Развертывание приложения
-
-**Основные шаги развертывания:**
-
-1. **Сборка приложения**: Использование инструментов сборки, таких как Maven или Gradle, для компиляции исходного кода и упаковки приложения в WAR-файл (`ChildLibrary.war`).
-
-2. **Размещение WAR-файла**: Копирование WAR-файла в каталог `standalone/deployments/` WildFly. Сервер автоматически развернет приложение и настроит его.
-
-3. **Проверка развертывания**: Использование административной консоли WildFly для проверки состояния развертывания и устранения возможных ошибок.
-
-4. **Доступ к приложению**: Открытие браузера и переход по адресу `http://localhost:8080/ChildLibrary/index.jsp` для проверки работоспособности приложения.
-
-## 5. Тестирование
-
-После развертывания приложения проведено комплексное тестирование всех функциональных возможностей:
-
-1. **Тестирование базы данных**: Проверка корректности создания и наполнения базы данных, а также правильности связей между таблицами.
-
-2. **Тестирование DAO-классов**: Убедились в правильности выполнения CRUD-операций через DAO-классы с использованием JPA.
-
-3. **Тестирование EJB-сервисов**: Проверка взаимодействия сервлетов с EJB-сервисами и корректности выполнения бизнес-логики.
-
-4. **Тестирование пользовательского интерфейса**: Проверка всех JSP-страниц на наличие ошибок отображения, корректности работы форм и навигации.
-
-5. **Тестирование производительности**: Оценка работы приложения при одновременном доступе нескольких пользователей и нагрузке на пул соединений.
-
-6. **Тестирование безопасности**: Проведение базовых проверок на доступность данных и корректность обработки вводимых пользователем данных.
-
-## 6. Заключение
-
-В результате проведенной работы было успешно разработано и развернуто веб-приложение "Детская библиотека", обладающее всеми необходимыми функциями для управления каталогом детских книг. Использование современных технологий Java EE, таких как JSP, сервлеты, JDBC, JPA и EJB, обеспечило высокую модульность, масштабируемость и поддерживаемость приложения.
-
-**Ключевые достижения проекта:**
-
-- **Модульная архитектура**: Разделение приложения на слои (модель, доступ к данным, сервисный слой, контроллеры, представление) обеспечило удобство разработки и поддержки.
-- **Использование ORM (JPA)**: Облегчило работу с базой данных и позволило сосредоточиться на бизнес-логике.
-- **Внедрение EJB**: Позволило централизовать бизнес-логику и обеспечить управление транзакциями.
-- **Оптимизация ресурсов**: Настройка пула соединений и использование пулов EJB-компонентов повысили производительность приложения.
+Die Webanwendung "Kinderbibliothek" wurde erfolgreich entwickelt und bereitgestellt. Sie bietet alle notwendigen Funktionen zur Verwaltung eines Buchkatalogs und zeichnet sich durch eine modulare Architektur sowie einfache Wartbarkeit aus.
